@@ -100,10 +100,10 @@ function optimize(fg, x, alg::ConjugateGradient;
     end
     if verbosity > 0
         if normgrad <= alg.gradtol
-            @info @sprintf("CG: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@INFO: CG: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
                             numiter, f, normgrad)
         else
-            @warn @sprintf("CG: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@WARN: CG: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
                             f, normgrad)
         end
     end
@@ -139,7 +139,7 @@ function (HZ::HagerZhang)(g, gprev, Pg, Pgprev, dprev, inner)
     # return max(β, zero(β))
     η = HZ.η*dgprev/dd
     if β < η
-        @warn "resorting to η"
+        println("@WARN: resorting to η")
     end
     return max(β, η)
 end

@@ -55,10 +55,10 @@ function optimize(fg, x, alg::GradientDescent;
             break
         end
         verbosity >= 2 &&
-            @info @sprintf("GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d",
+            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d",
                             numiter, f, normgrad, α, nfg)
         verbosity >= 3 &&
-            @info @sprintf("GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n\tx=%s",
+            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n\tx=%s",
                             numiter, f, normgrad, α, nfg, string(x))
 
         # increase α for next step
@@ -66,10 +66,10 @@ function optimize(fg, x, alg::GradientDescent;
     end
     if verbosity > 0
         if normgrad <= alg.gradtol
-            @info @sprintf("GD: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@INFO: GD: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
                             numiter, f, normgrad)
         else
-            @warn @sprintf("GD: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@WARN: GD: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
                             f, normgrad)
         end
     end

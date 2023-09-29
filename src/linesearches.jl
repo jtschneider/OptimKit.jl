@@ -78,7 +78,7 @@ function update(iter::HagerZhangLineSearchIterator, a::LineSearchPoint, b::LineS
     c = takestep(iter, αc)
     @assert isfinite(c.ϕ)
     iter.parameters.verbosity > 2 &&
-        @info @sprintf("Linesearch update: try c = %.2e, dϕᶜ = %.2e, ϕᶜ - ϕ₀ = %.2e", c.α, c.dϕ, c.ϕ - ϕ₀)
+        @printf("@INFO: Linesearch update: try c = %.2e, dϕᶜ = %.2e, ϕᶜ - ϕ₀ = %.2e", c.α, c.dϕ, c.ϕ - ϕ₀)
     if checkexactwolfe(c, p₀, c₁, c₂) || checkapproxwolfe(c, p₀, c₁, c₂, ϵ)
         return c, c, 1
     end
@@ -104,7 +104,7 @@ function bisect(iter::HagerZhangLineSearchIterator, a::LineSearchPoint, b::LineS
     while true
         if (b.α - a.α) <= eps(max(b.α, one(b.α)))
             if iter.parameters.verbosity > 0
-                @warn @sprintf("Linesearch bisection failure: [a, b] = [%.2e, %.2e], b-a = %.2e, dϕᵃ = %.2e, dϕᵇ = %.2e, (ϕᵇ - ϕᵃ)/(b-a) = %.2e", a.α, b.α, b.α - a.α, a.dϕ, b.dϕ, (b.ϕ - a.ϕ)/(b.α - a.α))
+                @printf("@WARN: Linesearch bisection failure: [a, b] = [%.2e, %.2e], b-a = %.2e, dϕᵃ = %.2e, dϕᵇ = %.2e, (ϕᵇ - ϕᵃ)/(b-a) = %.2e", a.α, b.α, b.α - a.α, a.dϕ, b.dϕ, (b.ϕ - a.ϕ)/(b.α - a.α))
             end
             return a, b, numfg
         end
@@ -112,8 +112,8 @@ function bisect(iter::HagerZhangLineSearchIterator, a::LineSearchPoint, b::LineS
         c = takestep(iter, αc)
         numfg += 1
         if iter.parameters.verbosity > 2
-            @info @sprintf(
-            """Linesearch bisect: [a, b] = [%.2e, %.2e], b-a = %.2e, dϕᵃ = %.2e, dϕᵇ = %.2e, (ϕᵇ - ϕᵃ) = %.2e
+            @sprintf(
+            """@INFO: Linesearch bisect: [a, b] = [%.2e, %.2e], b-a = %.2e, dϕᵃ = %.2e, dϕᵇ = %.2e, (ϕᵇ - ϕᵃ) = %.2e
             ↪︎ c = %.2e, dϕᶜ = %.2e, ϕᶜ - ϕᵃ = %.2e, wolfe = %d, approxwolfe = %d""",
             a.α, b.α, b.α-a.α, a.dϕ, b.dϕ, (b.ϕ - a.ϕ), c.α, c.dϕ, c.ϕ - a.ϕ, checkexactwolfe(c, p₀, c₁, c₂), checkapproxwolfe(c, p₀, c₁, c₂, ϵ))
         end
@@ -141,7 +141,7 @@ function bracket(iter::HagerZhangLineSearchIterator{T}, c::LineSearchPoint) wher
     a = p₀
     fmax = a.f + ϵ
     iter.parameters.verbosity > 2 &&
-        @info @sprintf("Linesearch start: dϕ₀ = %.2e, ϕ₀ = %.2e", a.dϕ, a.ϕ)
+        @sprintf("@INFO: Linesearch start: dϕ₀ = %.2e, ϕ₀ = %.2e", a.dϕ, a.ϕ)
     α = c.α
     while true
         while !(isfinite(c.ϕ) && isfinite(c.dϕ))
@@ -150,7 +150,7 @@ function bracket(iter::HagerZhangLineSearchIterator{T}, c::LineSearchPoint) wher
             numfg += 1
         end
         if iter.parameters.verbosity > 2
-            @info @sprintf("Linesearch bracket: try c = %.2e, dϕᶜ = %.2e, ϕᶜ - ϕ₀ = %.2e, wolfe = %d, approxwolfe = %d", c.α, c.dϕ, c.ϕ - p₀.ϕ, checkexactwolfe(c, p₀, c₁, c₂), checkapproxwolfe(c, p₀, c₁, c₂, ϵ))
+            @printf("@INFO: Linesearch bracket: try c = %.2e, dϕᶜ = %.2e, ϕᶜ - ϕ₀ = %.2e, wolfe = %d, approxwolfe = %d", c.α, c.dϕ, c.ϕ - p₀.ϕ, checkexactwolfe(c, p₀, c₁, c₂), checkapproxwolfe(c, p₀, c₁, c₂, ϵ))
         end
         c.dϕ >= 0 && return a, c, numfg# B1
         # from here: c.dϕ < 0
@@ -186,7 +186,7 @@ function Base.iterate(iter::HagerZhangLineSearchIterator)
     if a.α == b.α
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, true)
     elseif (b.α - a.α) < eps(one(a.α))
-        @warn "Linesearch bracket converged to a point without satisfying Wolfe conditions?"
+        println("@WARN: Linesearch bracket converged to a point without satisfying Wolfe conditions?")
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, true)
     else
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, false)
@@ -233,7 +233,7 @@ function Base.iterate(iter::HagerZhangLineSearchIterator, state::Tuple{LineSearc
     if a.α == b.α
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, true)
     elseif (b.α - a.α) < eps(one(a.α))
-        @warn "Linesearch bracket converged to a point without satisfying Wolfe conditions?"
+        println("@WARN: Linesearch bracket converged to a point without satisfying Wolfe conditions?")
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, true)
     else
         return (a.x, a.f, a.∇f, a.ξ, a.α, a.dϕ), (a, b, numfg, false)
@@ -264,15 +264,15 @@ function (ls::HagerZhangLineSearch)(fg, x₀, η₀, fg₀ = fg(x₀);
         a, b, numfg, done = state
         if done
             ls.verbosity >= 1 &&
-                @info @sprintf("Linesearch converged after %2d iterations: α = %.2e, dϕ = %.2e, ϕ - ϕ₀ = %.2e", k, α, dϕ, f - f₀)
+                @printf("@INFO: Linesearch converged after %2d iterations: α = %.2e, dϕ = %.2e, ϕ - ϕ₀ = %.2e", k, α, dϕ, f - f₀)
             return x, f, g, ξ, α, numfg
         elseif k == ls.maxiter
             ls.verbosity >= 1 &&
-                @info @sprintf("Linesearch not converged after %2d iterations: α = %.2e, dϕ = %.2e, ϕ - ϕ₀ = %.2e", k, α, dϕ, f - f₀)
+                @printf("@INFO: Linesearch not converged after %2d iterations: α = %.2e, dϕ = %.2e, ϕ - ϕ₀ = %.2e", k, α, dϕ, f - f₀)
             return x, f, g, ξ, α, numfg
         else
             ls.verbosity >= 2 &&
-                @info @sprintf("Linesearch step %d: [a,b] = [%.2e, %.2e], dϕᵃ = %.2e, dϕᵇ = %.2e, ϕᵃ - ϕ₀ = %.2e, ϕᵇ - ϕ₀ = %.2e", k, a.α, b.α, a.dϕ, b.dϕ, a.ϕ - f₀, b.ϕ - f₀)
+                @printf("@INFO: Linesearch step %d: [a,b] = [%.2e, %.2e], dϕᵃ = %.2e, dϕᵇ = %.2e, ϕᵃ - ϕ₀ = %.2e, ϕᵇ - ϕ₀ = %.2e", k, a.α, b.α, a.dϕ, b.dϕ, a.ϕ - f₀, b.ϕ - f₀)
             next = iterate(iter, state)
             @assert next !== nothing
             k += 1
