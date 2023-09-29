@@ -57,6 +57,9 @@ function optimize(fg, x, alg::GradientDescent;
         verbosity >= 2 &&
             @info @sprintf("GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d",
                             numiter, f, normgrad, α, nfg)
+        verbosity >= 3 &&
+            @info @sprintf("GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n\tx=%s",
+                            numiter, f, normgrad, α, nfg, String(x))
 
         # increase α for next step
         α = 2*α
