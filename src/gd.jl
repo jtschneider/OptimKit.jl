@@ -30,7 +30,7 @@ function optimize(fg, x, alg::GradientDescent;
 
     numiter = 0
     verbosity >= 2 &&
-        @info @sprintf("GD: initializing with f = %.12f, ‖∇f‖ = %.4e", f, normgrad)
+        @printf("@INFO GD: initializing with f = %.12f, ‖∇f‖ = %.4e\n", f, normgrad)
     while true
         # compute new search direction
         Pg = precondition(x, deepcopy(g))
@@ -55,10 +55,10 @@ function optimize(fg, x, alg::GradientDescent;
             break
         end
         verbosity >= 2 &&
-            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d",
+            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n",
                             numiter, f, normgrad, α, nfg)
         verbosity >= 3 &&
-            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n\tx=%s",
+            @printf("@INFO: GD: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, nfg = %d\n\tx=%s\n",
                             numiter, f, normgrad, α, nfg, string(x))
 
         # increase α for next step
@@ -66,10 +66,10 @@ function optimize(fg, x, alg::GradientDescent;
     end
     if verbosity > 0
         if normgrad <= alg.gradtol
-            @printf("@INFO: GD: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@INFO: GD: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e\n",
                             numiter, f, normgrad)
         else
-            @printf("@WARN: GD: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@WARN: GD: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e\n",
                             f, normgrad)
         end
     end

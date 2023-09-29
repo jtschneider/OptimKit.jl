@@ -36,7 +36,7 @@ function optimize(fg, x, alg::ConjugateGradient;
 
     numiter = 0
     verbosity >= 2 &&
-        @printf("CG: initializing with f = %.12f, ‖∇f‖ = %.4e", f, normgrad)
+        @printf("CG: initializing with f = %.12f, ‖∇f‖ = %.4e\n", f, normgrad)
     local xprev, gprev, Pgprev, ηprev
     while true
         # compute new search direction
@@ -80,10 +80,10 @@ function optimize(fg, x, alg::ConjugateGradient;
             break
         end
         verbosity == 2 &&
-            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d",
+            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n",
                             numiter, f, normgrad, α, β, nfg)
         verbosity >= 3 &&
-            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n\tx=%s",
+            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n\tx=%s\n",
                             numiter, f, normgrad, α, β, nfg, string(x))
 
         # transport gprev, ηprev and vectors in Hessian approximation to x
@@ -100,10 +100,10 @@ function optimize(fg, x, alg::ConjugateGradient;
     end
     if verbosity > 0
         if normgrad <= alg.gradtol
-            @printf("@INFO: CG: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@INFO: CG: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e\n",
                             numiter, f, normgrad)
         else
-            @printf("@WARN: CG: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@WARN: CG: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e\n",
                             f, normgrad)
         end
     end

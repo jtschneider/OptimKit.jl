@@ -32,7 +32,7 @@ function optimize(fg, x, alg::LBFGS;
 
     numiter = 0
     verbosity >= 2 &&
-        @info @sprintf("LBFGS: initializing with f = %.12f, ‖∇f‖ = %.4e", f, normgrad)
+        @printf("@INFO: LBFGS: initializing with f = %.12f, ‖∇f‖ = %.4e\n", f, normgrad)
 
     while true
         # compute new search direction
@@ -73,7 +73,7 @@ function optimize(fg, x, alg::LBFGS;
             break
         end
         verbosity >= 2 &&
-            @info @sprintf("LBFGS: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, m = %d, nfg = %d",
+            @printf("@INFO: LBFGS: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, m = %d, nfg = %d\n",
                             numiter, f, normgrad, α, length(H), nfg)
 
         # transport gprev, ηprev and vectors in Hessian approximation to x
@@ -138,10 +138,10 @@ function optimize(fg, x, alg::LBFGS;
     end
     if verbosity > 0
         if normgrad <= alg.gradtol
-            @printf("@INFO: LBFGS: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@INFO: LBFGS: converged after %d iterations: f = %.12f, ‖∇f‖ = %.4e\n",
                             numiter, f, normgrad)
         else
-            @printf("@WARN: LBFGS: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e",
+            @printf("@WARN: LBFGS: not converged to requested tol: f = %.12f, ‖∇f‖ = %.4e\n",
                             f, normgrad)
         end
     end
