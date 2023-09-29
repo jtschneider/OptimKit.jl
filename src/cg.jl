@@ -83,7 +83,7 @@ function optimize(fg, x, alg::ConjugateGradient;
             @info @sprintf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d",
                             numiter, f, normgrad, α, β, nfg)
          verbosity >= 3 &&
-            @info @sprintf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n\tx=%d",
+            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n\tx=%d",
                             numiter, f, normgrad, α, β, nfg, string(x))
 
         # transport gprev, ηprev and vectors in Hessian approximation to x
