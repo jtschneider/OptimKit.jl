@@ -36,7 +36,7 @@ function optimize(fg, x, alg::ConjugateGradient;
 
     numiter = 0
     verbosity >= 2 &&
-        @info @sprintf("CG: initializing with f = %.12f, ‖∇f‖ = %.4e", f, normgrad)
+        @printf("CG: initializing with f = %.12f, ‖∇f‖ = %.4e", f, normgrad)
     local xprev, gprev, Pgprev, ηprev
     while true
         # compute new search direction
@@ -79,10 +79,10 @@ function optimize(fg, x, alg::ConjugateGradient;
         if normgrad <= alg.gradtol || numiter >= alg.maxiter
             break
         end
-        verbosity >= 2 &&
-            @info @sprintf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d",
+        verbosity = 2 &&
+            @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d",
                             numiter, f, normgrad, α, β, nfg)
-         verbosity >= 3 &&
+        verbosity >= 3 &&
             @printf("CG: iter %4d: f = %.12f, ‖∇f‖ = %.4e, α = %.2e, β = %.2e, nfg = %d\n\tx=%d",
                             numiter, f, normgrad, α, β, nfg, string(x))
 
